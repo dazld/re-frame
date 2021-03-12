@@ -64,6 +64,16 @@
 
 ;; -- subscribe ---------------------------------------------------------------
 
+
+(defn run
+  "Attempt at allowing passing an app-db value to a subscription function"
+  [db query]
+  (let [query-id (first-in-vector query)
+        handler-fn (get-handler kind query-id)]
+    @(handler-fn db query)))
+
+
+
 (defn subscribe
   ([query]
    (trace/with-trace {:operation (first-in-vector query)

@@ -11,6 +11,8 @@
 
 (use-fixtures :each fixture-re-frame)
 
+
+
 (deftest test-reg-sub-clj-repl
   (subs/reg-sub
    :a-sub
@@ -30,6 +32,10 @@
 
   (let [test-sub (subs/subscribe [:a-b-sub])]
     (reset! db/app-db {:a 1 :b 2})
-    (is (= {:a 1 :b 2} @test-sub))
+    (is (= {:a 1 :b 2}
+           @test-sub
+           (subs/run {:a 1 :b 2} [:a-b-sub])))
+    (is (= {:a 3 :b 4}
+           (subs/run {:a 3 :b 4} [:a-b-sub])))
     (swap! db/app-db assoc :b 3)
     (is (= {:a 1 :b 3} @test-sub))))

@@ -18,8 +18,8 @@
 (def query->reaction (atom {}))
 
 (defn clear-subscription-cache!
-  "calls `on-dispose` for each cached item, 
-   which will cause the value to be removed from the cache" 
+  "calls `on-dispose` for each cached item,
+   which will cause the value to be removed from the cache"
   []
   (doseq [[k rxn] @query->reaction]
     (dispose! rxn))
@@ -63,6 +63,18 @@
 
 
 ;; -- subscribe ---------------------------------------------------------------
+
+
+(defn run
+  "Attempt at allowing passing an app-db value to a subscription function"
+  [db query]
+  (let [query-id (first-in-vector query)
+        handler-fn (get-handler kind query-id)]
+    ;; so, this bit is easy
+    ;; then, how to pass that value to any subscriptions _this_ calls?
+    @(handler-fn db query)))
+
+
 
 (defn subscribe
   ([query]
